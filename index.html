@@ -436,14 +436,10 @@
       studentEmail.value = '';
       updateWordCount();
       localStorage.removeItem(STORAGE_KEY);
-      statusMsg.className = 'status-message';
-      statusMsg.textContent = '';
-      statusMsg.style.display = 'none';
+      hideStatus();
     });
 
-    // ===== SUBMIT via Google Apps Script =====
-    var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfa72-exNLvRnBOfQ7OipeE-kaqP7YoV6-CfGwmR_fJhThCjURjkD5kq35e21O5sZT/exec';
-
+    // ===== STATUS MESSAGES =====
     function showStatus(message, type) {
       statusMsg.textContent = message;
       statusMsg.className = 'status-message show ' + type;
@@ -455,6 +451,9 @@
       statusMsg.textContent = '';
       statusMsg.style.display = 'none';
     }
+
+    // ===== SUBMIT via Google Apps Script =====
+    var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbz53sNcoViyzIkxlvfbxZYodGZzrNexkTKOHmhgxmz3zAwhW-F_1gqKEJFRZpvYk_u9/exec';
 
     submitBtn.addEventListener('click', function() {
       // Validate
@@ -485,33 +484,40 @@
       submitBtn.disabled = true;
       showStatus('Submitting your essay...', 'loading');
 
-      // Send data
+      // Send data as JSON
       var payload = {
         essay: essay,
         email: email,
         timestamp: new Date().toISOString()
       };
 
-      var formData = new FormData();
-      formData.append('essay', essay);
-      formData.append('email', email);
-      formData.append('timestamp', payload.timestamp);
-
       fetch(SCRIPT_URL, {
         method: 'POST',
-        mode: 'no-cors',
-        body: formData
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
       })
       .then(function(response) {
-        // With no-cors, we can't read the response reliably.
-        // Assume success if no error.
+        // Check if the response is OK
+        if (!response.ok) {
+          throw new Error('Server responded with status: ' + response.status);
+        }
+        return response.json(); // Parse JSON response
+      })
+      .then(function(data) {
+        // Handle success or error from the script
         submitBtn.disabled = false;
-        showStatus('Your essay has been submitted successfully! A copy has been sent to your email.', 'success');
-        saveToStorage();
-        // Optionally clear the essay area but keep email
-        // essayInput.value = '';
-        // updateWordCount();
-        // saveToStorage();
+        if (data.success === true) {
+          showStatus('Your essay has been submitted successfully! A copy has been sent to your email.', 'success');
+          saveToStorage();
+          // Optionally clear the essay area but keep email
+          // essayInput.value = '';
+          // updateWordCount();
+          // saveToStorage();
+        } else {
+          showStatus('Submission failed: ' + (data.message || 'Unknown error from server.'), 'error');
+        }
       })
       .catch(function(error) {
         submitBtn.disabled = false;
@@ -520,16 +526,16 @@
       });
     });
 
-    // ===== INIT =====
-    loadFromStorage();
-    updateWordCount();
-
     // ===== KEYBOARD SHORTCUT: Ctrl+Enter to submit =====
     essayInput.addEventListener('keydown', function(e) {
       if (e.ctrlKey && e.key === 'Enter') {
         submitBtn.click();
       }
     });
+
+    // ===== INIT =====
+    loadFromStorage();
+    updateWordCount();
 
   })();
 </script>
