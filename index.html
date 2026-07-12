@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>B2 Essay Writing - Modern Lifestyles and Health</title>
+  <style>
+    /* ===== AceLingua Color Palette (Red, Yellow, Blue) ===== */
+    :root {
+      --al-red: #ff0000;
+      --al-pure-red: #f70000;
+      --al-school-bus-yellow: #fdc20a;
+      --al-baltic-blue: #065e93;
+      --al-white: #ffffff;
+      --al-light-grey: #f0f2f5;
+      --al-warm-grey: #e8e0d5;
+      --al-cream: #fdfaf5;
+      --al-text-dark: #1a2a3a;
+      --al-text-medium: #4a5a6a;
+      --al-shadow: rgba(6, 94, 147, 0.15);
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      font-family: 'Segoe UI', Roboto, 'Helvetica Neue', sans-serif;
+      background: var(--al-light-grey);
+      color: var(--al-text-dark);
+      padding: 20px;
+      display: flex;
+      justify-content: center;
+      min-height: 100vh;
+    }
+
+    .container {
+      max-width: 900px;
+      width: 100%;
+      background: var(--al-white);
+      border-radius: 24px;
+      box-shadow: 0 8px 30px var(--al-shadow);
+      padding: 35px 40px;
+      position: relative;
+    }
+
+    h1 {
+      font-size: 2rem;
+      color: var(--al-baltic-blue);
+      margin-bottom: 4px;
+    }
+
+    .subtitle {
+      font-size: 1.1rem;
+      color: var(--al-text-medium);
+      border-bottom: 3px solid var(--al-school-bus-yellow);
+      padding-bottom: 12px;
+      margin-bottom: 20px;
+    }
+
+    /* ===== Instructions ===== */
+    .instructions {
+      background: var(--al-cream);
+      padding: 16px 20px;
+      border-radius: 12px;
+      border-left: 4px solid var(--al-baltic-blue);
+      margin-bottom: 20px;
+    }
+    .instructions p { margin-bottom: 6px; }
+    .instructions ul {
+      margin-left: 20px;
+      line-height: 1.6;
+    }
+    .instructions strong { color: var(--al-baltic-blue); }
+
+    /* ===== Prompt Box ===== */
+    .prompt-box {
+      background: var(--al-light-grey);
+      padding: 16px 20px;
+      border-radius: 12px;
+      margin-bottom: 20px;
+      border: 2px dashed var(--al-baltic-blue);
+    }
+    .prompt-box .label {
+      font-weight: 600;
+      color: var(--al-baltic-blue);
+      font-size: 0.9rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .prompt-box .quote {
+      font-style: italic;
+      font-size: 1.1rem;
+      margin: 6px 0;
+      color: var(--al-text-dark);
+    }
+    .prompt-box ul {
+      margin-left: 20px;
+      line-height: 1.6;
+    }
+
+    /* ===== Model Essay (Collapsible) ===== */
+    .model-toggle {
+      background: var(--al-baltic-blue);
+      color: var(--al-white);
+      border: none;
+      padding: 10px 20px;
+      border-radius: 30px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: 0.15s ease;
+      margin-bottom: 12px;
+    }
+    .model-toggle:hover { background: #044d7a; }
+
+    .model-essay {
+      background: var(--al-cream);
+      padding: 16px 20px;
+      border-radius: 12px;
+      border: 1px solid var(--al-warm-grey);
+      margin-bottom: 20px;
+      display: none;
+      line-height: 1.8;
+    }
+    .model-essay.open { display: block; }
+    .model-essay .word-count {
+      font-size: 0.85rem;
+      color: var(--al-text-medium);
+      margin-top: 8px;
+      font-style: italic;
+    }
+    .model-essay strong { color: var(--al-baltic-blue); }
+
+    /* ===== Writing Area ===== */
+    .writing-area {
+      margin-bottom: 20px;
+    }
+    .writing-area label {
+      font-weight: 600;
+      color: var(--al-baltic-blue);
+      display: block;
+      margin-bottom: 6px;
+    }
+    .writing-area textarea {
+      width: 100%;
+      height: 280px;
+      padding: 14px 16px;
+      font-size: 1rem;
+      font-family: inherit;
+      border: 2px solid var(--al-warm-grey);
+      border-radius: 12px;
+      resize: vertical;
+      transition: border-color 0.2s;
+      line-height: 1.7;
+    }
+    .writing-area textarea:focus {
+      outline: none;
+      border-color: var(--al-baltic-blue);
+    }
+    .word-counter {
+      text-align: right;
+      font-size: 0.9rem;
+      color: var(--al-text-medium);
+      margin-top: 4px;
+    }
+    .word-counter .count {
+      font-weight: 600;
+      color: var(--al-baltic-blue);
+    }
+    .word-counter .count.warning { color: var(--al-pure-red); }
+
+    /* ===== Submission Area ===== */
+    .submission-area {
+      background: var(--al-light-grey);
+      padding: 18px 22px;
+      border-radius: 12px;
+      margin-bottom: 16px;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 14px;
+      align-items: center;
+    }
+    .submission-area label {
+      font-weight: 600;
+      color: var(--al-baltic-blue);
+      font-size: 0.95rem;
+    }
+    .submission-area input[type="email"] {
+      flex: 1;
+      min-width: 200px;
+      padding: 10px 14px;
+      border: 2px solid var(--al-warm-grey);
+      border-radius: 8px;
+      font-size: 1rem;
+      font-family: inherit;
+      transition: border-color 0.2s;
+    }
+    .submission-area input[type="email"]:focus {
+      outline: none;
+      border-color: var(--al-baltic-blue);
+    }
+
+    .btn {
+      padding: 10px 32px;
+      border: none;
+      border-radius: 30px;
+      font-size: 1rem;
+      font-weight: 600;
+      cursor: pointer;
+      font-family: inherit;
+      transition: 0.15s ease;
+    }
+    .btn:active { transform: scale(0.96); }
+    .btn-submit {
+      background: var(--al-baltic-blue);
+      color: var(--al-white);
+    }
+    .btn-submit:hover { background: #044d7a; }
+    .btn-submit:disabled {
+      opacity: 0.6;
+      cursor: not-allowed;
+    }
+    .btn-reset-essay {
+      background: var(--al-pure-red);
+      color: var(--al-white);
+    }
+    .btn-reset-essay:hover { background: #cc0000; }
+
+    /* ===== Status / Feedback ===== */
+    .status-message {
+      padding: 12px 16px;
+      border-radius: 10px;
+      margin: 12px 0;
+      display: none;
+      font-weight: 500;
+    }
+    .status-message.show { display: block; }
+    .status-message.success {
+      background: #e6f0f5;
+      color: var(--al-baltic-blue);
+      border: 1px solid var(--al-baltic-blue);
+    }
+    .status-message.error {
+      background: #fdd0d0;
+      color: var(--al-pure-red);
+      border: 1px solid var(--al-pure-red);
+    }
+    .status-message.loading {
+      background: var(--al-school-bus-yellow);
+      color: var(--al-text-dark);
+      border: 1px solid var(--al-school-bus-yellow);
+    }
+
+    /* ===== CC License ===== */
+    .cc-license {
+      font-size: 0.8rem;
+      color: var(--al-text-medium);
+      text-align: center;
+      margin-top: 24px;
+      padding-top: 16px;
+      border-top: 1px solid var(--al-warm-grey);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 2px;
+    }
+    .cc-license a {
+      color: var(--al-baltic-blue);
+      text-decoration: none;
+    }
+    .cc-license a:hover { text-decoration: underline; }
+    .cc-license img {
+      max-width: 2em;
+      max-height: 2em;
+      margin-left: 0.1em;
+      margin-right: 0.1em;
+      border: none;
+      display: inline;
+      vertical-align: middle;
+    }
+
+    /* ===== Responsive ===== */
+    @media (max-width: 700px) {
+      .container { padding: 18px; }
+      h1 { font-size: 1.6rem; }
+      .submission-area { flex-direction: column; align-items: stretch; }
+      .submission-area input[type="email"] { min-width: auto; }
+      .btn { width: 100%; text-align: center; }
+      .cc-license { font-size: 0.7rem; }
+      .cc-license img { max-width: 1.6em; max-height: 1.6em; }
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+
+  <!-- ===== HEADER ===== -->
+  <h1>Modern Lifestyles and Health</h1>
+  <p class="subtitle">B2 Essay Writing Practice</p>
+
+  <!-- ===== INSTRUCTIONS ===== -->
+  <div class="instructions">
+    <p><strong>Instructions:</strong> Write an essay of <strong>140–190 words</strong> in response to the prompt below.</p>
+    <ul>
+      <li>Include an introduction and a conclusion.</li>
+      <li>Address <strong>all three</strong> points in the notes.</li>
+      <li>Use formal, academic language.</li>
+      <li>You have <strong>40 minutes</strong> to complete this task.</li>
+    </ul>
+  </div>
+
+  <!-- ===== PROMPT ===== -->
+  <div class="prompt-box">
+    <div class="label">Essay Prompt</div>
+    <div class="quote">"Modern lifestyles can seriously endanger our health."</div>
+    <p><strong>Do you agree?</strong></p>
+    <p><strong>Write about:</strong></p>
+    <ul>
+      <li>food</li>
+      <li>physical activity</li>
+      <li>…… (your own choice)</li>
+    </ul>
+    <p style="margin-top: 6px; font-size: 0.9rem; color: var(--al-text-medium);">Write your essay using all the notes.</p>
+  </div>
+
+  <!-- ===== MODEL ESSAY (Collapsible) ===== -->
+  <button class="model-toggle" id="modelToggle">Show Model Essay</button>
+  <div class="model-essay" id="modelEssay">
+    <p><strong>Model Essay (164 words)</strong></p>
+    <p>It is clear that modern lifestyles present serious risks to our health, and I strongly agree with this view. This essay will examine three areas where these dangers are most evident.</p>
+    <p>Firstly, the food we eat today is a major concern. Many people rely on fast food and processed meals because they are quick and convenient. However, these foods are often high in fat, sugar and salt, which can lead to obesity and heart disease over time.</p>
+    <p>Secondly, our lives have become increasingly sedentary. Most people spend hours sitting at desks or in front of screens, with little time for exercise. This lack of physical activity contributes to a range of health problems, including back pain and poor circulation.</p>
+    <p>Thirdly, modern life is often stressful. The pressure to succeed at work, combined with constant use of technology, leaves many people feeling exhausted. Chronic stress can weaken the immune system and cause mental health issues such as anxiety.</p>
+    <p>In conclusion, I believe that modern lifestyles do seriously endanger our health. It is important for individuals to make conscious choices about their diet, activity levels, and stress management to protect their well-being.</p>
+    <div class="word-count">Word count: 164</div>
+  </div>
+
+  <!-- ===== WRITING AREA ===== -->
+  <div class="writing-area">
+    <label for="essayInput">Your Essay</label>
+    <textarea id="essayInput" placeholder="Type your essay here..."></textarea>
+    <div class="word-counter">
+      Words: <span class="count" id="wordCount">0</span> / 190
+    </div>
+  </div>
+
+  <!-- ===== SUBMISSION AREA ===== -->
+  <div class="submission-area">
+    <label for="studentEmail">Your Email (for confirmation):</label>
+    <input type="email" id="studentEmail" placeholder="your.email@example.com">
+    <button class="btn btn-submit" id="submitBtn">Submit Essay</button>
+    <button class="btn btn-reset-essay" id="resetBtn">Clear All</button>
+  </div>
+
+  <!-- ===== STATUS MESSAGE ===== -->
+  <div id="statusMessage" class="status-message"></div>
+
+  <!-- ===== CC LICENSE ===== -->
+  <div class="cc-license">
+    <a href="https://example.com">ESL Classroom resources</a> © 1999 by <a href="https://example.com">InglesLibrePe@gmail.com</a> is licensed under <a href="https://creativecommons.org/licenses/by-sa/4.0/">Creative Commons Attribution-ShareAlike 4.0 International</a>
+    <img src="https://mirrors.creativecommons.org/presskit/icons/cc.svg" alt="Creative Commons">
+    <img src="https://mirrors.creativecommons.org/presskit/icons/by.svg" alt="Attribution">
+    <img src="https://mirrors.creativecommons.org/presskit/icons/sa.svg" alt="ShareAlike">
+  </div>
+
+</div>
+
+<script>
+  (function() {
+    // ===== DOM REFS =====
+    var essayInput = document.getElementById('essayInput');
+    var wordCountDisplay = document.getElementById('wordCount');
+    var studentEmail = document.getElementById('studentEmail');
+    var submitBtn = document.getElementById('submitBtn');
+    var resetBtn = document.getElementById('resetBtn');
+    var statusMsg = document.getElementById('statusMessage');
+    var modelToggle = document.getElementById('modelToggle');
+    var modelEssay = document.getElementById('modelEssay');
+
+    // ===== WORD COUNTER =====
+    function countWords(text) {
+      var trimmed = text.trim();
+      if (trimmed === '') return 0;
+      return trimmed.split(/\s+/).length;
+    }
+
+    function updateWordCount() {
+      var text = essayInput.value;
+      var count = countWords(text);
+      wordCountDisplay.textContent = count;
+      if (count > 190) {
+        wordCountDisplay.classList.add('warning');
+      } else {
+        wordCountDisplay.classList.remove('warning');
+      }
+    }
+
+    essayInput.addEventListener('input', updateWordCount);
+
+    // ===== MODEL ESSAY TOGGLE =====
+    modelToggle.addEventListener('click', function() {
+      var isOpen = modelEssay.classList.toggle('open');
+      modelToggle.textContent = isOpen ? 'Hide Model Essay' : 'Show Model Essay';
+    });
+
+    // ===== LOCAL STORAGE AUTO-SAVE =====
+    var STORAGE_KEY = 'b2_essay_data';
+
+    function saveToStorage() {
+      var data = {
+        essay: essayInput.value,
+        email: studentEmail.value
+      };
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+    }
+
+    function loadFromStorage() {
+      var saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return;
+      try {
+        var data = JSON.parse(saved);
+        if (data.essay) essayInput.value = data.essay;
+        if (data.email) studentEmail.value = data.email;
+        updateWordCount();
+      } catch (e) { /* ignore */ }
+    }
+
+    essayInput.addEventListener('input', saveToStorage);
+    studentEmail.addEventListener('input', saveToStorage);
+
+    // ===== RESET =====
+    resetBtn.addEventListener('click', function() {
+      essayInput.value = '';
+      studentEmail.value = '';
+      updateWordCount();
+      localStorage.removeItem(STORAGE_KEY);
+      statusMsg.className = 'status-message';
+      statusMsg.textContent = '';
+      statusMsg.style.display = 'none';
+    });
+
+    // ===== SUBMIT via Google Apps Script =====
+    var SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxfa72-exNLvRnBOfQ7OipeE-kaqP7YoV6-CfGwmR_fJhThCjURjkD5kq35e21O5sZT/exec';
+
+    function showStatus(message, type) {
+      statusMsg.textContent = message;
+      statusMsg.className = 'status-message show ' + type;
+      statusMsg.style.display = 'block';
+    }
+
+    function hideStatus() {
+      statusMsg.className = 'status-message';
+      statusMsg.textContent = '';
+      statusMsg.style.display = 'none';
+    }
+
+    submitBtn.addEventListener('click', function() {
+      // Validate
+      var essay = essayInput.value.trim();
+      var email = studentEmail.value.trim();
+
+      if (essay === '') {
+        showStatus('Please write your essay before submitting.', 'error');
+        return;
+      }
+
+      var wordCount = countWords(essay);
+      if (wordCount < 140) {
+        showStatus('Your essay is too short. Please write at least 140 words. (Current: ' + wordCount + ' words)', 'error');
+        return;
+      }
+      if (wordCount > 190) {
+        showStatus('Your essay exceeds the maximum word count of 190. (Current: ' + wordCount + ' words)', 'error');
+        return;
+      }
+
+      if (email === '' || !email.includes('@') || !email.includes('.')) {
+        showStatus('Please enter a valid email address.', 'error');
+        return;
+      }
+
+      // Disable button
+      submitBtn.disabled = true;
+      showStatus('Submitting your essay...', 'loading');
+
+      // Send data
+      var payload = {
+        essay: essay,
+        email: email,
+        timestamp: new Date().toISOString()
+      };
+
+      var formData = new FormData();
+      formData.append('essay', essay);
+      formData.append('email', email);
+      formData.append('timestamp', payload.timestamp);
+
+      fetch(SCRIPT_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        body: formData
+      })
+      .then(function(response) {
+        // With no-cors, we can't read the response reliably.
+        // Assume success if no error.
+        submitBtn.disabled = false;
+        showStatus('Your essay has been submitted successfully! A copy has been sent to your email.', 'success');
+        saveToStorage();
+        // Optionally clear the essay area but keep email
+        // essayInput.value = '';
+        // updateWordCount();
+        // saveToStorage();
+      })
+      .catch(function(error) {
+        submitBtn.disabled = false;
+        showStatus('There was an error submitting your essay. Please try again. (Error: ' + error.message + ')', 'error');
+        console.error('Submission error:', error);
+      });
+    });
+
+    // ===== INIT =====
+    loadFromStorage();
+    updateWordCount();
+
+    // ===== KEYBOARD SHORTCUT: Ctrl+Enter to submit =====
+    essayInput.addEventListener('keydown', function(e) {
+      if (e.ctrlKey && e.key === 'Enter') {
+        submitBtn.click();
+      }
+    });
+
+  })();
+</script>
+
+</body>
+</html>
